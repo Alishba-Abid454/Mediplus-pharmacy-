@@ -1,0 +1,37 @@
+﻿<div class="sidebar">
+    <h4 class="text-white p-3 border-bottom">Pharmacy Admin</h4>
+
+    <nav class="nav flex-column">
+        <a class="nav-link active" href="@Url.Action("Dashboard", "Admin")">Dashboard</a>
+        <a class="nav-link" href="@Url.Action("MedicineList", "Medicine")">Medicine List</a>
+        <a class="nav-link" href="@Url.Action("AddMedicine", "Medicine")">Add Medicine</a>
+        <a class="nav-link" href="@Url.Action("LowStock", "Admin")">Low Stock</a>
+        <a class="nav-link" href="@Url.Action("ExpirySoon", "Admin")">Expiry Soon</a>
+        <a class="nav-link" href="@Url.Action("EditMedicine", "Medicine")">Edit Medicine</a>
+    </nav>
+
+</div>
+
+<style>
+.sidebar {
+    width: 260px;
+    background-color: #647485;
+    min-height: 100vh;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.sidebar .nav-link {
+    color: #fff;
+    padding: 12px 20px;
+    border-bottom: 1px solid #4b545c;
+}
+
+.sidebar .nav-link:hover {
+    background-color: #78848f;
+}
+
+.sidebar .nav-link.active {
+    background-color: #007bff;
+}
+</style>

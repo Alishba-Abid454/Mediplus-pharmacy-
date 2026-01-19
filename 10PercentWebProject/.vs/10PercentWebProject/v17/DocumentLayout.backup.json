@@ -1,0 +1,133 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\hp\\OneDrive\\Desktop\\C#\\10PercentWebProject\\10PercentWebProject\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{8B9D1D44-EB90-49EA-A9B5-978F0A6C157A}|10PercentWebProject.csproj|c:\\users\\hp\\onedrive\\desktop\\c#\\10percentwebproject\\10percentwebproject\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8B9D1D44-EB90-49EA-A9B5-978F0A6C157A}|10PercentWebProject.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8B9D1D44-EB90-49EA-A9B5-978F0A6C157A}|10PercentWebProject.csproj|c:\\users\\hp\\onedrive\\desktop\\c#\\10percentwebproject\\10percentwebproject\\views\\admin\\addmedicine.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{8B9D1D44-EB90-49EA-A9B5-978F0A6C157A}|10PercentWebProject.csproj|solutionrelative:views\\admin\\addmedicine.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8B9D1D44-EB90-49EA-A9B5-978F0A6C157A}|10PercentWebProject.csproj|c:\\users\\hp\\onedrive\\desktop\\c#\\10percentwebproject\\10percentwebproject\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8B9D1D44-EB90-49EA-A9B5-978F0A6C157A}|10PercentWebProject.csproj|solutionrelative:controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3AD6A245-E17A-41AE-83B6-124CCFE0F0FD}|..\\UnitTestingForProject.UnitTest\\UnitTestingForProject.UnitTest.csproj|c:\\users\\hp\\onedrive\\desktop\\c#\\10percentwebproject\\unittestingforproject.unittest\\medicinecontrollertest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3AD6A245-E17A-41AE-83B6-124CCFE0F0FD}|..\\UnitTestingForProject.UnitTest\\UnitTestingForProject.UnitTest.csproj|c:\\users\\hp\\onedrive\\desktop\\c#\\10percentwebproject\\unittestingforproject.unittest\\unittestingforproject.unittest.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8B9D1D44-EB90-49EA-A9B5-978F0A6C157A}|10PercentWebProject.csproj|c:\\users\\hp\\onedrive\\desktop\\c#\\10percentwebproject\\10percentwebproject\\controllers\\medicinecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8B9D1D44-EB90-49EA-A9B5-978F0A6C157A}|10PercentWebProject.csproj|solutionrelative:controllers\\medicinecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 158,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 4,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "UnitTestingForProject.UnitTest.csproj",
+              "DocumentMoniker": "C:\\Users\\hp\\OneDrive\\Desktop\\C#\\10PercentWebProject\\UnitTestingForProject.UnitTest\\UnitTestingForProject.UnitTest.csproj",
+              "RelativeDocumentMoniker": "..\\UnitTestingForProject.UnitTest\\UnitTestingForProject.UnitTest.csproj",
+              "ToolTip": "C:\\Users\\hp\\OneDrive\\Desktop\\C#\\10PercentWebProject\\UnitTestingForProject.UnitTest\\UnitTestingForProject.UnitTest.csproj",
+              "RelativeToolTip": "..\\UnitTestingForProject.UnitTest\\UnitTestingForProject.UnitTest.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-01-07T06:46:35.419Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "MedicineControllerTest.cs",
+              "DocumentMoniker": "C:\\Users\\hp\\OneDrive\\Desktop\\C#\\10PercentWebProject\\UnitTestingForProject.UnitTest\\MedicineControllerTest.cs",
+              "RelativeDocumentMoniker": "..\\UnitTestingForProject.UnitTest\\MedicineControllerTest.cs",
+              "ToolTip": "C:\\Users\\hp\\OneDrive\\Desktop\\C#\\10PercentWebProject\\UnitTestingForProject.UnitTest\\MedicineControllerTest.cs",
+              "RelativeToolTip": "..\\UnitTestingForProject.UnitTest\\MedicineControllerTest.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAA9AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-07T06:52:03.734Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\hp\\OneDrive\\Desktop\\C#\\10PercentWebProject\\10PercentWebProject\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\Users\\hp\\OneDrive\\Desktop\\C#\\10PercentWebProject\\10PercentWebProject\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-31T06:21:04.222Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "MedicineController.cs",
+              "DocumentMoniker": "C:\\Users\\hp\\OneDrive\\Desktop\\C#\\10PercentWebProject\\10PercentWebProject\\Controllers\\MedicineController.cs",
+              "RelativeDocumentMoniker": "Controllers\\MedicineController.cs",
+              "ToolTip": "C:\\Users\\hp\\OneDrive\\Desktop\\C#\\10PercentWebProject\\10PercentWebProject\\Controllers\\MedicineController.cs",
+              "RelativeToolTip": "Controllers\\MedicineController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAOgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-31T06:19:30.441Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "AdminController.cs",
+              "DocumentMoniker": "C:\\Users\\hp\\OneDrive\\Desktop\\C#\\10PercentWebProject\\10PercentWebProject\\Controllers\\AdminController.cs",
+              "RelativeDocumentMoniker": "Controllers\\AdminController.cs",
+              "ToolTip": "C:\\Users\\hp\\OneDrive\\Desktop\\C#\\10PercentWebProject\\10PercentWebProject\\Controllers\\AdminController.cs",
+              "RelativeToolTip": "Controllers\\AdminController.cs",
+              "ViewState": "AgIAAFMAAAAAAAAAAAAgwBYAAAA3AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-31T06:18:39.673Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AddMedicine.cshtml",
+              "DocumentMoniker": "C:\\Users\\hp\\OneDrive\\Desktop\\C#\\10PercentWebProject\\10PercentWebProject\\Views\\Admin\\AddMedicine.cshtml",
+              "RelativeDocumentMoniker": "Views\\Admin\\AddMedicine.cshtml",
+              "ToolTip": "C:\\Users\\hp\\OneDrive\\Desktop\\C#\\10PercentWebProject\\10PercentWebProject\\Views\\Admin\\AddMedicine.cshtml",
+              "RelativeToolTip": "Views\\Admin\\AddMedicine.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-12-31T05:46:09.804Z"
+            }
+          ]
+        },
+        {
+          "DockedWidth": 434,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

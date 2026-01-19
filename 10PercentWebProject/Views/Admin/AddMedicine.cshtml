@@ -1,0 +1,155 @@
+﻿@model _10PercentWebProject.Models.AdminMedicine
+@{
+    ViewData["Title"] = "Add New Medicine";
+    Layout = "_AdminLayout";
+}
+
+<div class="main-content">
+    <div class="medicine-form">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="text-primary">💊 Add New Medicine</h2>
+            <a asp-action="MedicineList" class="btn btn-outline-secondary">← Back to Medicine List</a>
+        </div>
+
+        <!-- Display Success/Error Messages -->
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                @TempData["SuccessMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                @TempData["ErrorMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        <div class="card form-card">
+            <div class="card-header form-header">
+                <h4 class="mb-0">Medicine Information</h4>
+            </div>
+            <div class="card-body p-4">
+                <form asp-action="AddMedicine" method="post" id="addMedicineForm">
+                    @Html.AntiForgeryToken()
+
+                    <!-- Basic Information -->
+                    <div class="form-section">
+                        <h6>Basic Information</h6>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label asp-for="Name" class="form-label required-field">Medicine Name *</label>
+                                <input asp-for="Name" class="form-control" placeholder="e.g., Paracetamol 500mg" required />
+                                <span asp-validation-for="Name" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="BrandName" class="form-label">Brand Name</label>
+                                <input asp-for="BrandName" class="form-control" placeholder="e.g., Panadol" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Image URL Field -->
+                    <div class="form-section">
+                        <h6>Medicine Image URL</h6>
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <input asp-for="ImageUrl" class="form-control"
+                                       placeholder="https://example.com/images/medicine.jpg" />
+                                <span asp-validation-for="ImageUrl" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Category & Supplier -->
+                    <div class="form-section">
+                        <h6>Category & Supplier</h6>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label asp-for="Category" class="form-label required-field">Category *</label>
+                                <select asp-for="Category" class="form-select" required>
+                                    <option value="">-- Select Category --</option>
+                                    <option value="Antibiotic">Antibiotic</option>
+                                    <option value="Pain Relief">Pain Relief</option>
+                                    <option value="Vitamin">Vitamin & Supplements</option>
+                                    <option value="Cold & Flu">Cold & Flu</option>
+                                    <option value="Skin Care">Skin Care</option>
+                                    <option value="First Aid">First Aid</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                                <span asp-validation-for="Category" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Supplier" class="form-label required-field">Supplier *</label>
+                                <input asp-for="Supplier" class="form-control" placeholder="e.g., MediCorp Pharmaceuticals" required />
+                                <span asp-validation-for="Supplier" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Stock & Pricing -->
+                    <div class="form-section">
+                        <h6>Stock & Pricing</h6>
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label asp-for="Quantity" class="form-label required-field">Quantity *</label>
+                                <input asp-for="Quantity" class="form-control" min="1" value="10" required />
+                                <span asp-validation-for="Quantity" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="Price" class="form-label required-field">Price ($) *</label>
+                                <input asp-for="Price" class="form-control" min="0.01" step="0.01" value="5.99" required />
+                                <span asp-validation-for="Price" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="MinStockLevel" class="form-label">Minimum Stock Level</label>
+                                <input asp-for="MinStockLevel" class="form-control" min="1" value="10" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Expiry & Additional Info -->
+                    <div class="form-section">
+                        <h6>Expiry & Additional Information</h6>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label asp-for="ExpiryDate" class="form-label required-field">Expiry Date *</label>
+                                <input asp-for="ExpiryDate" type="date" class="form-control"
+                                       value="@DateTime.Now.AddYears(1).ToString("yyyy-MM-dd")" required />
+                                <span asp-validation-for="ExpiryDate" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="BatchNumber" class="form-label">Batch Number</label>
+                                <input asp-for="BatchNumber" class="form-control"
+                                       value="BATCH-@DateTime.Now.ToString("yyyyMMdd")" />
+                            </div>
+                            <div class="col-12">
+                                <label asp-for="Description" class="form-label">Description</label>
+                                <textarea asp-for="Description" class="form-control" rows="3"
+                                          placeholder="Enter medicine description, dosage instructions, side effects, etc."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <a asp-action="MedicineList" class="btn btn-outline-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-success btn-submit">
+                            <i class="fas fa-save me-1"></i> Save Medicine
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Set min date to today for expiry date
+        document.getElementById('ExpiryDate').min = new Date().toISOString().split('T')[0];
+    </script>
+}

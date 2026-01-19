@@ -1,0 +1,490 @@
+﻿@model List<CartItem>
+@{
+    ViewData["Title"] = "Shopping Cart";
+    Layout = "_UserLayout";
+}
+
+<style>
+    .cart-page {
+        background: #f8f9fa;
+        min-height: 100vh;
+        padding: 20px 0;
+    }
+
+    .cart-header {
+        background: linear-gradient(45deg, #007bff 0%, #0056b3 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 12px;
+        margin-bottom: 30px;
+    }
+
+    .cart-item-card {
+        background: white;
+        border: none;
+        box-shadow: 0 3px 10px rgba(0, 123, 255, 0.08);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 15px;
+        border: 1px solid rgba(0, 123, 255, 0.1);
+        transition: all 0.3s ease;
+    }
+   
+    .cart-item-card:hover {
+        transform: translateX(5px);
+        box-shadow: 0 5px 15px rgba(0, 123, 255, 0.15);
+    }
+
+    .summary-card {
+        background: white;
+        border: none;
+        box-shadow: 0 3px 10px rgba(0, 123, 255, 0.08);
+        border-radius: 12px;
+        padding: 20px;
+        border: 1px solid rgba(0, 123, 255, 0.1);
+        position: sticky;
+        top: 20px;
+    }
+
+    .summary-header {
+        background: linear-gradient(45deg, #007bff 0%, #0056b3 100%);
+        color: white;
+        padding: 15px;
+        border-radius: 10px 10px 0 0;
+        margin: -20px -20px 20px -20px;
+    }
+
+    .item-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        color: white;
+    }
+        
+    .item-icon.tablets {
+        background: linear-gradient(45deg, #007bff 0%, #0056b3 100%);
+    }
+
+    .item-icon.syrup {
+        background: linear-gradient(45deg, #28a745 0%, #218838 100%);
+    }
+
+    .item-icon.ointment {
+        background: linear-gradient(45deg, #ffc107 0%, #e0a800 100%);
+    }
+    
+    .item-icon.injection {
+        background: linear-gradient(45deg, #dc3545 0%, #c82333 100%);
+    }
+
+    .item-icon.default {
+        background: linear-gradient(45deg, #6c757d 0%, #545b62 100%);
+    }
+
+    .item-name {
+        color: #007bff;
+        font-weight: 600;
+    }
+
+    .item-price {
+        font-weight: 600;
+        color: #28a745;
+    }
+
+    .item-total {
+        font-size: 16px;
+        font-weight: 700;
+        color: #28a745;
+    }
+
+    .quantity-control {
+        width: 120px;
+        display: flex;
+        align-items: center;
+        border: 2px solid rgba(0, 123, 255, 0.2);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .quantity-btn {
+        background: #f8f9fa;
+        border: none;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #007bff;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .quantity-btn:hover {
+        background: #007bff;
+        color: white;
+    }
+
+    .quantity-input {
+        width: 40px;
+        border: none;
+        text-align: center;
+        font-weight: 600;
+        color: #007bff;
+        background: transparent;
+    }
+
+    .btn-remove {
+        background: linear-gradient(45deg, #dc3545 0%, #c82333 100%);
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-remove:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
+    }
+
+    .btn-checkout {
+        background: linear-gradient(45deg, #28a745 0%, #218838 100%);
+        color: white;
+        padding: 15px;
+        font-size: 18px;
+        font-weight: 600;
+        border-radius: 10px;
+        border: none;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+
+    .btn-checkout:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(40, 167, 69, 0.3);
+    }
+
+    .price-row {
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(0, 123, 255, 0.1);
+    }
+
+    .total-price {
+        font-size: 24px;
+        font-weight: 700;
+        color: #28a745;
+    }
+
+    .empty-cart {
+        text-align: center;
+        padding: 50px 20px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    }
+
+    .cart-icon {
+        font-size: 80px;
+        color: #007bff;
+        opacity: 0.5;
+        margin-bottom: 20px;
+    }
+
+    .cart-badge {
+        background: linear-gradient(45deg, #007bff 0%, #0056b3 100%);
+        color: white;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .toast-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+    }
+</style>
+
+<div class="cart-page">
+    <div class="container">
+        <!-- Toast Container -->
+        <div id="toastContainer" class="toast-container"></div>
+
+        <!-- Cart Header -->
+        <div class="cart-header">
+            <h2 class="mb-2">Your Shopping Cart</h2>
+            <div class="d-flex align-items-center">
+                <span class="cart-badge me-3">@Model.Count items</span>
+                <span class="badge bg-light text-primary">Total: ₹@ViewBag.CartTotal?.ToString("0.00")</span>
+            </div>
+        </div>
+
+        @if (Model.Count == 0)
+        {
+            <div class="empty-cart">
+                <i class="fas fa-shopping-cart cart-icon"></i>
+                <h3 class="mb-3" style="color: #007bff;">Your cart is empty</h3>
+                <p class="text-muted mb-4">Add some amazing medicines to get started</p>
+                <a asp-action="HomePage" class="btn btn-primary">
+                    <i class="fas fa-pills me-2"></i> Browse Medicines
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="row">
+                <!-- Cart Items -->
+                <div class="col-lg-8">
+                    @foreach (var item in Model)
+                    {
+                        <div class="cart-item-card" id="cart-item-@item.CartItemId">
+                            <div class="row align-items-center">
+                                <!-- Item Icon (based on category) -->
+                                <div class="col-auto">
+                                    <div class="item-icon @GetIconClass(item.Category)">
+                                        <i class="@GetMedicineIcon(item.Category)"></i>
+                                    </div>
+                                </div>
+
+                                <!-- Item Details -->
+                                <div class="col">
+                                    <h6 class="item-name mb-1">@item.Name</h6>
+                                    <p class="text-muted small mb-2">@item.Description</p>
+                                    <div class="d-flex align-items-center">
+                                        <span class="badge bg-primary me-2">@item.Category</span>
+                                        <span class="badge @(item.PrescriptionType == "prescription" ? "bg-warning" : "bg-info")">
+                                            @(item.PrescriptionType == "prescription" ? "Rx" : "OTC")
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <!-- Quantity -->
+                                <div class="col-auto">
+                                    <div class="quantity-control">
+                                        <button type="button" class="quantity-btn" onclick="updateQuantity(@item.CartItemId, -1)">-</button>
+                                        <input type="text" class="quantity-input" id="quantity-input-@item.CartItemId" value="@item.Quantity" readonly>
+                                        <button type="button" class="quantity-btn" onclick="updateQuantity(@item.CartItemId, 1)">+</button>
+                                    </div>
+                                </div>
+
+                                <!-- Price -->
+                                <div class="col-auto text-center">
+                                    <div class="item-price">₹@item.Price.ToString("0.00")</div>
+                                    <small class="text-muted">each</small>
+                                </div>
+
+                                <!-- Total -->
+                                <div class="col-auto text-center">
+                                    <div class="item-total" id="item-total-@item.CartItemId">₹@item.Total.ToString("0.00")</div>
+                                    <small class="text-muted">total</small>
+                                </div>
+
+                                <!-- Remove Button -->
+                                <div class="col-auto">
+                                    <form asp-action="RemoveFromCart" method="post" class="remove-form" data-cartitemid="@item.CartItemId">
+                                        <input type="hidden" name="cartItemId" value="@item.CartItemId" />
+                                        <button type="submit" class="btn-remove">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <!-- Cart Actions -->
+                    <div class="d-flex justify-content-between mt-4">
+                        <a asp-action="HomePage" class="btn btn-outline-primary">
+                            <i class="fas fa-arrow-left me-2"></i> Continue Shopping
+                        </a>
+                        @if (Model.Count > 0)
+                        {
+                            <form asp-action="ClearCart" method="post" style="display: inline;">
+                                <button type="submit" class="btn btn-outline-danger">
+                                    <i class="fas fa-trash-alt me-2"></i> Clear Cart
+                                </button>
+                            </form>
+                        }
+                    </div>
+                </div>
+
+                <!-- Order Summary -->
+                <div class="col-lg-4">
+                    <div class="summary-card">
+                        <div class="summary-header">
+                            <h5 class="mb-0"><i class="fas fa-receipt me-2"></i> Order Summary</h5>
+                        </div>
+
+                        <!-- Price Breakdown -->
+                        <div class="price-row d-flex justify-content-between">
+                            <span>Subtotal (@Model.Count items)</span>
+                            <span class="item-price" id="subtotal-amount">₹@ViewBag.CartTotal?.ToString("0.00")</span>
+                        </div>
+                        <div class="price-row d-flex justify-content-between">
+                            <span>Shipping</span>
+                            <span class="text-success">FREE</span>
+                        </div>
+                        <div class="price-row d-flex justify-content-between">
+                            <span>Tax (18%)</span>
+                            <span id="tax-amount">₹@((ViewBag.CartTotal * 0.18m)?.ToString("0.00"))</span>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <strong style="font-size: 18px;">Total Amount</strong>
+                            <strong class="total-price" id="total-amount">₹@((ViewBag.CartTotal * 1.18m)?.ToString("0.00"))</strong>
+                        </div>
+
+                        <!-- Checkout Button -->
+                        <div class="d-grid gap-2 mt-4">
+                            <a asp-action="Checkout" class="btn-checkout">
+                                <i class="fas fa-lock me-2"></i> Proceed to Checkout
+                            </a>
+                        </div>
+
+                        <!-- Additional Info -->
+                        <div class="mt-4 pt-3 border-top">
+                            <h6><i class="fas fa-shield-alt text-primary me-2"></i> Secure Payment</h6>
+                            <h6><i class="fas fa-truck text-primary me-2"></i> Free Delivery</h6>
+                            <h6><i class="fas fa-undo text-primary me-2"></i> Easy Returns</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+@functions {
+    // Helper function to get icon class based on category
+    public string GetIconClass(string category)
+    {
+        return category?.ToLower() switch
+        {
+            "tablets" or "capsules" => "tablets",
+            "syrup" or "liquid" => "syrup",
+            "ointment" => "ointment",
+            "injection" => "injection",
+            _ => "default"
+        };
+    }
+
+    // Helper function to get Font Awesome icon
+    public string GetMedicineIcon(string category)
+    {
+        return category?.ToLower() switch
+        {
+            "tablets" or "capsules" => "fas fa-pills",
+            "syrup" or "liquid" => "fas fa-prescription-bottle",
+            "ointment" => "fas fa-bottle-droplet",
+            "injection" => "fas fa-syringe",
+            "vaccine" => "fas fa-shield-virus",
+            _ => "fas fa-capsules"
+        };
+    }
+}
+
+<script>
+    function updateQuantity(cartItemId, change) {
+        // Get current quantity from the input field
+        const inputField = document.getElementById(`quantity-input-${cartItemId}`);
+        let currentQty = parseInt(inputField.value);
+
+        // Calculate new quantity (minimum 1)
+        const newQty = Math.max(1, currentQty + change);
+
+        // Only update if quantity actually changed
+        if (newQty !== currentQty) {
+            // Update the input value immediately for better UX
+            inputField.value = newQty;
+
+            // Call server to update quantity
+            updateCartItemQuantity(cartItemId, newQty);
+        }
+    }
+
+    async function updateCartItemQuantity(cartItemId, quantity) {
+        try {
+            // Show loading state
+            showMessage("Updating cart...", "info");
+
+            // Send request to server
+            const response = await fetch('/Cart/UpdateQuantity', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({
+                    cartItemId: cartItemId,
+                    quantity: quantity
+                })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+
+                // Update item total
+                const itemTotalElement = document.getElementById(`item-total-${cartItemId}`);
+                if (itemTotalElement && data.itemTotal) {
+                    itemTotalElement.textContent = `₹${data.itemTotal.toFixed(2)}`;
+                }
+
+                // Update summary
+                updateOrderSummary(data.cartTotal);
+
+                showMessage("Cart updated successfully!", "success");
+            } else {
+                throw new Error('Failed to update cart');
+            }
+        } catch (error) {
+            console.error('Error updating cart:', error);
+            showMessage("Failed to update cart. Please try again.", "error");
+
+            // Reload the page to sync with server state
+            setTimeout(() => {
+                window.location.reload();
+            }, 1500);
+        }
+    }
+
+    function updateQuantity(cartItemId, change) {
+        // Just submit a form to your existing UpdateCart action
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '/Medicine/UpdateCart';
+
+        const cartItemIdInput = document.createElement('input');
+        cartItemIdInput.type = 'hidden';
+        cartItemIdInput.name = 'cartItemId';
+        cartItemIdInput.value = cartItemId;
+
+        const quantityInput = document.getElementById(`quantity-input-${cartItemId}`);
+        const currentQty = parseInt(quantityInput.value);
+        const newQty = Math.max(1, currentQty + change);
+
+        const quantityValueInput = document.createElement('input');
+        quantityValueInput.type = 'hidden';
+        quantityValueInput.name = 'quantity';
+        quantityValueInput.value = newQty;
+
+        form.appendChild(cartItemIdInput);
+        form.appendChild(quantityValueInput);
+        document.body.appendChild(form);
+
+        // Submit the form
+        form.submit();
+    }
+</script>
+
+
+

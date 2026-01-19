@@ -1,0 +1,681 @@
+﻿@model Medicine
+@{
+    ViewData["Title"] = Model.Name + " - Details";
+    Layout = "_UserLayout";
+}
+
+<style>
+    .medicine-detail-page {
+        background: #f8f9fa;
+        min-height: 100vh;
+        padding: 20px 0;
+    }
+
+    .medicine-card {
+        background: white;
+        border: none;
+        box-shadow: 0 3px 10px rgba(0, 123, 255, 0.08);
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid rgba(0, 123, 255, 0.1);
+    }
+
+    .image-container {
+        height: 400px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        padding: 20px;
+    }
+
+    .medicine-img {
+        max-height: 100%;
+        max-width: 100%;
+        object-fit: contain;
+        transition: transform 0.5s ease;
+    }
+
+        .medicine-img:hover {
+            transform: scale(1.05);
+        }
+
+    .badge-container {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        z-index: 2;
+    }
+
+    .medicine-badge {
+        background: linear-gradient(45deg, #dc3545 0%, #c82333 100%);
+        color: white;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: bold;
+        border: 2px solid white;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .medicine-title {
+        color: #007bff;
+        font-weight: 700;
+        border-bottom: 2px solid rgba(0, 123, 255, 0.1);
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+
+    .price-tag {
+        font-size: 32px;
+        font-weight: 700;
+        color: #28a745;
+        margin-bottom: 15px;
+    }
+
+    .stock-badge {
+        font-size: 14px;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-weight: 600;
+    }
+
+    .info-item {
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(0, 123, 255, 0.1);
+    }
+
+    .info-label {
+        font-weight: 600;
+        color: #007bff;
+        width: 120px;
+    }
+
+    .btn-add-to-cart {
+        background: linear-gradient(45deg, #28a745 0%, #218838 100%);
+        color: white;
+        padding: 15px 30px;
+        font-size: 18px;
+        font-weight: 600;
+        border-radius: 10px;
+        border: none;
+        transition: all 0.3s ease;
+    }
+
+        .btn-add-to-cart:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(40, 167, 69, 0.3);
+        }
+
+        .btn-add-to-cart:disabled {
+            background: linear-gradient(45deg, #6c757d 0%, #545b62 100%);
+            cursor: not-allowed;
+        }
+
+    /* NEW: Checkout button styles */
+    .btn-checkout {
+        background: linear-gradient(45deg, #007bff 0%, #0056b3 100%);
+        color: white;
+        padding: 15px 30px;
+        font-size: 18px;
+        font-weight: 600;
+        border-radius: 10px;
+        border: none;
+        transition: all 0.3s ease;
+        width: 100%;
+        margin-top: 15px;
+    }
+
+        .btn-checkout:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 123, 255, 0.3);
+        }
+
+    .btn-view-cart {
+        background: linear-gradient(45deg, #ffc107 0%, #e0a800 100%);
+        color: white;
+        padding: 15px 30px;
+        font-size: 16px;
+        font-weight: 600;
+        border-radius: 10px;
+        border: none;
+        transition: all 0.3s ease;
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .btn-view-cart:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(255, 193, 7, 0.3);
+    }
+
+    .cart-actions-container {
+        background: rgba(0, 123, 255, 0.05);
+        border-radius: 10px;
+        padding: 20px;
+        margin-top: 20px;
+        border: 1px solid rgba(0, 123, 255, 0.1);
+        display: none; /* Hidden by default */
+    }
+
+    .cart-actions-container.show {
+        display: block;
+        animation: fadeIn 0.5s ease;
+    }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .cart-success-message {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+        padding: 10px;
+        background: rgba(40, 167, 69, 0.1);
+        border-radius: 8px;
+        border-left: 4px solid #28a745;
+    }
+
+    .cart-success-icon {
+        font-size: 24px;
+        color: #28a745;
+        margin-right: 15px;
+    }
+
+    .quantity-selector {
+        border: 2px solid rgba(0, 123, 255, 0.2);
+        border-radius: 8px;
+        padding: 8px 12px;
+        font-size: 16px;
+        color: #007bff;
+        font-weight: 600;
+        width: 100px;
+    }
+
+    .benefit-item {
+        background: rgba(0, 123, 255, 0.05);
+        padding: 12px 15px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        border-left: 4px solid #007bff;
+    }
+
+    .related-card {
+        background: white;
+        border: none;
+        box-shadow: 0 2px 8px rgba(0, 123, 255, 0.05);
+        border-radius: 10px;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(0, 123, 255, 0.1);
+    }
+
+    .related-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0, 123, 255, 0.15);
+    }
+
+    .related-img {
+        height: 120px;
+        object-fit: contain;
+        padding: 10px;
+        background: #f8f9fa;
+        border-radius: 8px;
+    }
+
+    .alert-message {
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 20px;
+        animation: slideIn 0.5s ease;
+    }
+
+    @@keyframes slideIn {
+        from {
+            transform: translateY(-20px);
+            opacity: 0;
+        }
+
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    /* Toast Notification Styles */
+    .toast-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+    }
+
+    .toast {
+        min-width: 250px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        margin-bottom: 10px;
+    }
+
+    .btn-close-white {
+        filter: brightness(0) invert(1);
+    }
+</style>
+
+<div class="medicine-detail-page">
+    <div class="container">
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb" style="background: rgba(0, 123, 255, 0.05); padding: 10px 15px; border-radius: 8px;">
+                <li class="breadcrumb-item"><a asp-action="HomePage" style="color: #007bff; text-decoration: none;">Home</a></li>
+                <li class="breadcrumb-item"><a asp-action="Category" asp-route-name="@Model.Category" style="color: #007bff; text-decoration: none;">@Model.Category</a></li>
+                <li class="breadcrumb-item active" style="color: #0056b3;">@Model.Name</li>
+            </ol>
+        </nav>
+
+        <!-- Toast Container -->
+        <div id="toastContainer" class="toast-container"></div>
+
+        <!-- Display Success/Error Messages -->
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success alert-message alert-dismissible fade show" role="alert">
+                <i class="fas fa-check-circle me-2"></i> @TempData["SuccessMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger alert-message alert-dismissible fade show" role="alert">
+                <i class="fas fa-exclamation-circle me-2"></i> @TempData["ErrorMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+
+        <div class="row">
+            <!-- Medicine Image -->
+            <div class="col-lg-5 mb-4">
+                <div class="medicine-card position-relative">
+                    @if (!string.IsNullOrEmpty(Model.BadgeType))
+                    {
+                        <div class="badge-container">
+                            <span class="medicine-badge">@Model.BadgeType</span>
+                        </div>
+                    }
+                    <div class="image-container">
+                        <img src="@Model.ImageUrl" class="medicine-img" alt="@Model.Name">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Medicine Details -->
+            <div class="col-lg-7">
+                <div class="medicine-card p-4">
+                    <h1 class="medicine-title">@Model.Name</h1>
+
+                    <!-- Price and Stock -->
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="price-tag" id="priceDisplay">₹@Model.Price.ToString("0.00")</div>
+                        <span class="stock-badge @(Model.StockStatus == "In Stock" ? "bg-success" :
+                                                                                                            Model.StockStatus == "Low Stock" ? "bg-warning" : "bg-danger") ms-3">
+                            @Model.StockStatus
+                        </span>
+                    </div>
+
+                    <!-- Medicine Information -->
+                    <div class="mb-4">
+                        <div class="info-item d-flex">
+                            <span class="info-label">Category:</span>
+                            <span class="badge bg-primary">@Model.Category</span>
+                        </div>
+                        <div class="info-item d-flex">
+                            <span class="info-label">Availability:</span>
+                            <span class="@(Model.StockStatus == "In Stock" ? "text-success" : "text-warning")">
+                                @Model.StockStatus
+                            </span>
+                        </div>
+                        @if (Model.IsOnSale)
+                        {
+                            <div class="info-item d-flex">
+                                <span class="info-label">Offer:</span>
+                                <span class="text-danger">On Sale</span>
+                            </div>
+                        }
+                        @if (Model.IsFeatured)
+                        {
+                            <div class="info-item d-flex">
+                                <span class="info-label">Status:</span>
+                                <span class="text-warning">Featured Product</span>
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Description -->
+                    <div class="mb-4">
+                        <h5 style="color: #007bff;">Description</h5>
+                        <p class="text-muted" style="line-height: 1.6;">@Model.Description</p>
+                    </div>
+
+                    <!-- Add to Cart Form -->
+                    <form asp-action="AddToCart" asp-controller="Medicine" method="post" id="addToCartForm">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="medicineId" value="@Model.MedicineId" />
+
+                        <div class="row align-items-center mb-4">
+                            <div class="col-md-3">
+                                <label for="quantity" class="form-label" style="color: #007bff; font-weight: 600;">Quantity:</label>
+                            </div>
+                            <div class="col-md-4">
+                                <select name="quantity" class="form-select quantity-selector" id="quantity">
+                                    @for (int i = 1; i <= 10; i++)
+                                    {
+                                        <option value="@i">@i</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-5">
+                                <button type="submit" class="btn-add-to-cart w-100"
+                                        id="addToCartBtn"
+                                        @(Model.StockStatus == "Out of Stock" ? "disabled" : "")>
+                                    <i class="fas fa-cart-plus me-2"></i> Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- Cart Actions Container (Initially Hidden) -->
+                    <div class="cart-actions-container" id="cartActions">
+                        <div class="cart-success-message">
+                            <i class="fas fa-check-circle cart-success-icon"></i>
+                            <div>
+                                <strong>Item added to cart successfully!</strong>
+                                <p class="mb-0">What would you like to do next?</p>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <a asp-action="Cart" class="btn btn-view-cart">
+                                    <i class="fas fa-shopping-cart me-2"></i> View Cart
+                                </a>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <a asp-action="Checkout" class="btn btn-checkout">
+                                    <i class="fas fa-lock me-2"></i> Proceed to Checkout
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-3">
+                            <a href="#" class="text-primary" onclick="hideCartActions()">
+                                <i class="fas fa-times me-1"></i> Close
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Benefits -->
+                    <div class="mt-4">
+                        <h5 style="color: #007bff;">Benefits</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="benefit-item">
+                                    <i class="fas fa-shield-alt text-primary me-2"></i>
+                                    <span>100% Genuine Medicines</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="benefit-item">
+                                    <i class="fas fa-truck text-primary me-2"></i>
+                                    <span>Free Delivery on ₹499+</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="benefit-item">
+                                    <i class="fas fa-undo text-primary me-2"></i>
+                                    <span>Easy 7-Day Returns</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="benefit-item">
+                                    <i class="fas fa-headset text-primary me-2"></i>
+                                    <span>24/7 Customer Support</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Related Medicines -->
+        @if (ViewBag.RelatedMedicines != null && ((List<Medicine>)ViewBag.RelatedMedicines).Count > 0)
+        {
+            <div class="row mt-5">
+                <div class="col-12">
+                    <div class="medicine-card p-4">
+                        <h3 style="color: #007bff; border-bottom: 2px solid rgba(0, 123, 255, 0.1); padding-bottom: 10px;">
+                            <i class="fas fa-pills me-2"></i> Related Medicines in @Model.Category
+                        </h3>
+                        <div class="row mt-4">
+                            @foreach (var related in ViewBag.RelatedMedicines)
+                            {
+                                if (related.MedicineId != Model.MedicineId)
+                                {
+                                    <div class="col-md-3 col-sm-6 mb-4">
+                                        <a asp-action="MedicineDetail" asp-route-id="@related.MedicineId"
+                                           class="text-decoration-none">
+                                            <div class="related-card p-3 text-center h-100">
+                                                <img src="@related.ImageUrl" class="related-img w-100 mb-3" alt="@related.Name">
+                                                <h6 class="mb-2" style="color: #007bff; height: 40px; overflow: hidden;">@related.Name</h6>
+                                                <div class="price-tag small">₹@related.Price.ToString("0.00")</div>
+                                                <span class="badge @(related.StockStatus == "In Stock" ? "bg-success" : "bg-warning")">
+                                                    @related.StockStatus
+                                                </span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<script>
+    // Check if item was just added to cart (from TempData)
+    document.addEventListener('DOMContentLoaded', function() {
+        const successMessage = "@TempData["SuccessMessage"]";
+        if (successMessage && successMessage.toLowerCase().includes("cart")) {
+            showCartActions();
+        }
+    });
+
+    // Show cart actions after adding to cart
+    function showCartActions() {
+        const cartActions = document.getElementById('cartActions');
+        if (cartActions) {
+            cartActions.classList.add('show');
+
+            // Scroll to cart actions
+            setTimeout(() => {
+                cartActions.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 300);
+        }
+    }
+
+    // Hide cart actions
+    function hideCartActions() {
+        const cartActions = document.getElementById('cartActions');
+        if (cartActions) {
+            cartActions.classList.remove('show');
+        }
+    }
+
+    // Add to Cart form submission with AJAX
+    document.getElementById('addToCartForm').addEventListener('submit', function(e) {
+        e.preventDefault(); // PREVENT DEFAULT FORM SUBMISSION
+
+        const button = document.getElementById('addToCartBtn');
+        const form = this;
+
+        if (!button.disabled) {
+            const originalText = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding to Cart...';
+            button.disabled = true;
+
+            // Get form data
+            const formData = new FormData(form);
+
+            // Send AJAX request
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.text();
+                }
+                throw new Error('Network response was not ok.');
+            })
+            .then(data => {
+                // Show success message
+                showCartActions();
+
+                // Show toast notification
+                showMessage('Item added to cart successfully!', 'success');
+
+                // Reset button after 2 seconds
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.disabled = false;
+                }, 2000);
+
+                // Optionally update cart count in header
+                updateCartCount();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                button.innerHTML = '<i class="fas fa-exclamation-circle"></i> Failed';
+
+                // Show error message
+                showMessage('Failed to add item to cart. Please try again.', 'error');
+
+                // Reset button after 3 seconds
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.disabled = false;
+                }, 3000);
+            });
+        }
+    });
+
+    // Update price based on quantity
+    document.getElementById('quantity').addEventListener('change', function() {
+        const price = @Model.Price;
+        const quantity = parseInt(this.value);
+        const totalPrice = price * quantity;
+        document.getElementById('priceDisplay').innerHTML = `₹${totalPrice.toFixed(2)}`;
+    });
+
+    // Helper function to show toast messages
+    function showMessage(message, type = 'success') {
+        const toastContainer = document.getElementById('toastContainer');
+        if (!toastContainer) return;
+
+        const toast = document.createElement('div');
+        toast.className = `toast show align-items-center text-bg-${type === 'error' ? 'danger' : 'success'} border-0`;
+
+        toast.innerHTML = `
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="fas fa-${type === 'error' ? 'exclamation-circle' : 'check-circle'} me-2"></i>
+                    ${message}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" onclick="this.parentElement.parentElement.remove()"></button>
+            </div>
+        `;
+
+        toastContainer.appendChild(toast);
+
+        // Remove after 3 seconds
+        setTimeout(() => {
+            if (toast.parentElement) {
+                toast.remove();
+            }
+        }, 3000);
+    }
+
+    // Update cart count in header (if you have one)
+    function updateCartCount() {
+        // If you have a cart count indicator in your header, update it here
+        const cartCountElement = document.querySelector('.cart-count');
+        if (cartCountElement) {
+            const currentCount = parseInt(cartCountElement.textContent) || 0;
+            cartCountElement.textContent = currentCount + 1;
+        }
+    }
+
+    // Quick add to cart and go to checkout (one-click checkout)
+    function quickCheckout() {
+        const quantity = document.getElementById('quantity').value;
+        const medicineId = @Model.MedicineId;
+
+        // Show loading
+        const button = document.getElementById('addToCartBtn');
+        const originalText = button.innerHTML;
+        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+        button.disabled = true;
+
+        // Create form data
+        const formData = new FormData();
+        formData.append('medicineId', medicineId);
+        formData.append('quantity', quantity);
+
+        // Send AJAX request
+        fetch('/Medicine/AddToCart', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                // Redirect to checkout page after successful add
+                window.location.href = '/Medicine/Checkout';
+            } else {
+                throw new Error('Failed to add to cart');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            button.innerHTML = '<i class="fas fa-exclamation-circle"></i> Failed';
+            showMessage('Failed to process checkout. Please try again.', 'error');
+
+            // Reset button after 3 seconds
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.disabled = false;
+            }, 3000);
+        });
+    }
+</script>
+

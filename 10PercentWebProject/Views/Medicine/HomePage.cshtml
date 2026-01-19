@@ -1,0 +1,788 @@
+﻿@model List<Medicine>
+@{
+    ViewData["Title"] = "MedicinePlus Pharmacy - Home";
+    Layout = "_UserLayout";
+}
+
+<style>
+    .main-container {
+        background: #f5f7fa;
+        min-height: 100vh;
+    }
+
+    .hero-card {
+        background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+        color: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 123, 255, 0.3);
+        position: relative;
+        padding: 40px 30px;
+    }
+
+    /* FIXED: Cart Icon Styles - RIGHT ALIGNED */
+    .cart-icon-fixed {
+        position: absolute;
+        top: 30px;
+        right: 30px;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        padding: 12px 20px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        min-width: 150px;
+        text-decoration: none !important;
+        backdrop-filter: blur(10px);
+        z-index: 10;
+    }
+
+    .cart-icon-fixed:hover {
+        background: rgba(255, 255, 255, 0.25);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .cart-icon-fixed i {
+        font-size: 20px;
+        color: white;
+    }
+
+    .cart-icon-fixed .cart-text {
+        display: flex;
+        flex-direction: column;
+        color: white;
+    }
+
+    .cart-icon-fixed .cart-text .cart-label {
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    .cart-icon-fixed .cart-text .cart-items {
+        font-size: 12px;
+        opacity: 0.9;
+    }
+
+    .cart-count-badge-fixed {
+        background: #dc3545;
+        color: white;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: bold;
+        margin-left: auto;
+        border: 2px solid white;
+    }
+
+    .hero-content {
+        max-width: 80%;
+    }
+
+    .hero-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 15px;
+        line-height: 1.2;
+    }
+
+    .hero-subtitle {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        margin-bottom: 25px;
+        max-width: 600px;
+    }
+
+    .stat-card {
+        transition: all 0.3s ease;
+        border: none;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        border-left: 4px solid #007bff;
+        border-radius: 10px;
+    }
+
+     
+    .stat-card:hover {
+     
+        transform: translateY(-5px);
+        
+        box-shadow: 0 8px 25px rgba(0, 123, 255, 0.15);
+        
+    }
+
+    
+    .stat-card.primary {
+    
+        border-left-color: #007bff;
+        
+        background: linear-gradient(135deg, #ffffff 0%, #f8fbff 100%);
+        
+    }
+
+    
+    .stat-card.warning {
+    
+        border-left-color: #ffc107;
+        
+        background: linear-gradient(135deg, #ffffff 0%, #fffbf0 100%);
+        
+    }
+
+    .stat-card.danger {
+        border-left-color: #dc3545;
+        background: linear-gradient(135deg, #ffffff 0%, #fff0f0 100%);
+    }
+
+    .stat-card.success {
+        border-left-color: #28a745;   
+        background: linear-gradient(135deg, #ffffff 0%, #f0fff4 100%);
+    }
+
+    .medicine-card {
+        transition: all 0.3s ease;
+        border: none;
+        box-shadow: 0 3px 6px rgba(0, 123, 255, 0.08);
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid rgba(0, 123, 255, 0.1);
+    }
+     
+    .medicine-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 20px rgba(0, 123, 255, 0.15);
+        border-color: #007bff;
+    }
+
+    .category-badge {
+        background: linear-gradient(45deg, #007bff 0%, #0056b3 100%);
+        color: white;
+        border-radius: 20px;
+        padding: 5px 15px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .stock-badge {
+        font-size: 11px;
+        padding: 4px 10px;
+        border-radius: 12px;
+    }
+
+    .featured-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: linear-gradient(45deg, #007bff 0%, #0056b3 100%);
+        color: white;
+        padding: 3px 10px;
+        border-radius: 15px;
+        font-size: 11px;
+        font-weight: bold;
+        border: 2px solid white;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .sale-badge {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background: linear-gradient(45deg, #dc3545 0%, #c82333 100%);
+        color: white;
+        padding: 3px 10px;
+        border-radius: 15px;
+        font-size: 11px;
+        font-weight: bold;
+        animation: pulse 2s infinite;
+        border: 2px solid white;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    @@keyframes pulse {
+        0% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.05);
+        }
+
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    .card-img-container {
+        height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f8f9fa;
+        padding: 15px;
+        position: relative;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    }
+
+    .card-img-top {
+        max-height: 100%;
+        max-width: 100%;
+        object-fit: contain;
+        transition: transform 0.5s ease;
+    }
+
+    .medicine-card:hover .card-img-top {
+        transform: scale(1.05);
+    }
+
+    /* Search related styles removed */
+    .category-filter {
+        background: white;
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 3px 10px rgba(0, 123, 255, 0.08);
+        border: 1px solid rgba(0, 123, 255, 0.1);
+    }
+
+    .category-btn {
+        border-radius: 25px;
+        padding: 8px 20px;
+        margin: 5px;
+        transition: all 0.3s ease;
+        border: 2px solid rgba(0, 123, 255, 0.3);
+        color: #007bff;
+        background: white;
+    }
+
+    .category-btn:hover {
+        border-color: #007bff;
+        background: #007bff;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 123, 255, 0.2);
+    }
+
+    .sidebar-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 3px 10px rgba(0, 123, 255, 0.08);
+        margin-bottom: 20px;
+        overflow: hidden;
+        border: 1px solid rgba(0, 123, 255, 0.1);
+    }
+
+    .sidebar-header {
+        background: linear-gradient(45deg, #007bff 0%, #0056b3 100%);
+        color: white;
+        padding: 15px;
+        font-weight: 600;
+        font-size: 16px;
+    }
+
+    .featured-item {
+        padding: 12px 15px;
+        border-bottom: 1px solid rgba(0, 123, 255, 0.1);
+        transition: all 0.3s ease;
+    }
+    
+    .featured-item:hover {
+        background: rgba(0, 123, 255, 0.05);
+        transform: translateX(5px);
+    }
+
+    .featured-item:last-child {
+        border-bottom: none;
+    }
+
+    .price-tag {
+        font-size: 18px;
+        font-weight: 700;
+        color: #28a745;
+    }
+
+    .old-price {
+        text-decoration: line-through;
+        color: #6c757d;
+        font-size: 14px;
+    }
+
+    .btn-outline-primary {
+        border-color: #007bff;
+        color: #007bff;
+    }
+
+    .btn-outline-primary:hover {
+        background: #007bff;
+        color: white;
+    }
+
+    .btn-success {
+        background: linear-gradient(45deg, #28a745 0%, #218838 100%);
+        border: none;
+    }
+
+    .btn-success:hover {
+        background: linear-gradient(45deg, #218838 0%, #1e7e34 100%);
+    }
+
+    .bg-primary {
+        background: linear-gradient(45deg, #007bff 0%, #0056b3 100%) !important;
+    }
+
+    .badge.bg-primary {
+        background: linear-gradient(45deg, #007bff 0%, #0056b3 100%) !important;
+        border: none;
+    }
+
+    .text-primary {
+        color: #007bff !important;
+    }
+
+    .text-warning {
+        color: #ffc107 !important;
+    }
+
+    .text-danger {
+        color: #dc3545 !important;
+    }
+
+    .text-success {
+        color: #28a745 !important;
+    }
+
+    .btn-outline-danger {
+        border-color: #dc3545;
+        color: #dc3545;
+    }
+      
+    .btn-outline-danger:hover {
+        background: #dc3545;
+        color: white;
+    }
+
+    .border-danger {
+        border-color: #dc3545 !important;
+    }
+
+    .bg-danger {
+        background: linear-gradient(45deg, #dc3545 0%, #c82333 100%) !important;
+    }
+
+    /* Floating Cart Button */
+    .floating-cart-btn {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: linear-gradient(45deg, #28a745 0%, #218838 100%);
+        color: white;
+        border: none;
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        transition: all 0.3s ease;
+    }
+
+    .floating-cart-btn:hover {
+        transform: scale(1.1);
+        box-shadow: 0 6px 20px rgba(40, 167, 69, 0.6);
+    }
+
+    .floating-cart-count {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background: #dc3545;
+        color: white;
+        border-radius: 50%;
+        width: 25px;
+        height: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: bold;
+        border: 2px solid white;
+    }
+
+    /* Alert Styles */
+    .alert-fixed {
+        position: fixed;
+        top: 80px;
+        right: 20px;
+        z-index: 1050;
+        min-width: 300px;
+        animation: slideIn 0.3s ease;
+    }
+
+    @@keyframes slideIn {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    /* Mobile responsive for cart */
+    @@media (max-width: 768px) {
+        .cart-icon-fixed {
+            position: relative;
+            top: auto;
+            right: auto;
+            margin-top: 20px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .hero-content {
+            max-width: 100%;
+        }
+
+        .hero-title {
+            font-size: 1.8rem;
+        }
+    }
+</style>
+
+<!-- Success/Error Message Display -->
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show alert-fixed" role="alert">
+        <i class="fas fa-check-circle me-2"></i> @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show alert-fixed" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i> @TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="main-container">
+    <div class="container-fluid py-4">
+        <!-- Hero Section with FIXED RIGHT-ALIGNED Cart Button -->
+        <div class="hero-card mb-4">
+            <!-- My Cart Button - RIGHT SIDE FIXED -->
+
+            <div class="hero-content">
+                <h1 class="hero-title">Welcome to MedicinePlus Pharmacy</h1>
+                <p class="hero-subtitle">Your trusted partner for genuine medicines & healthcare products</p>
+
+            </div>
+
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="row mb-4">
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card stat-card primary h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h5 class="card-title text-muted">Total Medicines</h5>
+                                <h2 class="text-primary mb-0">@Model.Count</h2>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="fas fa-pills fa-3x text-primary opacity-50"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card stat-card warning h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h5 class="card-title text-muted">Featured</h5>
+                                <h2 class="text-warning mb-0">@ViewBag.FeaturedMedicines.Count</h2>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="fas fa-star fa-3x text-warning opacity-50"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card stat-card danger h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h5 class="card-title text-muted">On Sale</h5>
+                                <h2 class="text-danger mb-0">@ViewBag.SaleMedicines.Count</h2>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="fas fa-tag fa-3x text-danger opacity-50"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card stat-card success h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h5 class="card-title text-muted">Categories</h5>
+                                <h2 class="text-success mb-0">@ViewBag.Categories.Count</h2>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="fas fa-layer-group fa-3x text-success opacity-50"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-lg-3 mb-4">
+                <!-- Featured Medicines Sidebar -->
+                <div class="sidebar-card">
+                    <div class="sidebar-header">
+                        <i class="fas fa-star me-2"></i> Featured Medicines
+                    </div>
+                    <div class="p-0">
+                        @foreach (var medicine in ViewBag.FeaturedMedicines)
+                        {
+                            <a asp-action="MedicineDetail" asp-route-id="@medicine.MedicineId"
+                               class="text-decoration-none">
+                                <div class="featured-item">
+                                    <div class="d-flex align-items-center">
+                                        <div class="flex-shrink-0 me-3">
+                                            <img src="@medicine.ImageUrl" alt="@medicine.Name"
+                                                 style="width: 50px; height: 50px; object-fit: contain; border-radius: 8px; border: 1px solid rgba(0, 123, 255, 0.2);">
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-1" style="color: #007bff;">@medicine.Name</h6>
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <span class="text-success fw-bold">₹@medicine.Price.ToString("0.00")</span>
+                                                <span class="badge bg-primary stock-badge">@medicine.Category</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        }
+                    </div>
+                </div>
+
+                <!-- Categories Sidebar -->
+                <div class="sidebar-card">
+                    <div class="sidebar-header">
+                        <i class="fas fa-list me-2"></i> Categories
+                    </div>
+                    <div class="p-3">
+                        @foreach (var category in ViewBag.Categories)
+                        {
+                            <a asp-action="Category" asp-route-name="@category"
+                               class="btn category-btn mb-2">
+                                @category
+                                <span class="badge bg-primary ms-2">
+                                    @Model.Count(m => m.Category == category)
+                                </span>
+                            </a>
+                        }
+                    </div>
+                </div>
+
+                <!-- Sale Banner -->
+                @if (ViewBag.SaleMedicines.Count > 0)
+                {
+                    <div class="sidebar-card border-danger">
+                        <div class="sidebar-header bg-danger">
+                            <i class="fas fa-fire me-2"></i> Hot Deals
+                        </div>
+                        <div class="p-3 text-center">
+                            <i class="fas fa-tag fa-3x text-danger mb-3"></i>
+                            <h5 style="color: #dc3545;">Up to 50% OFF</h5>
+                            <p class="text-muted">On selected medicines</p>
+                            <a href="#" class="btn btn-danger w-100">View All Offers</a>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-lg-9">
+                <!-- Sale Section -->
+                @if (ViewBag.SaleMedicines.Count > 0)
+                {
+                    <div class="card mb-4 border-danger">
+                        <div class="card-header bg-danger text-white d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0"><i class="fas fa-fire me-2"></i> Hot Deals - On Sale Now!</h5>
+                            <span class="badge bg-light text-danger">Limited Time Offer</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                @foreach (var medicine in ViewBag.SaleMedicines)
+                                {
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card medicine-card border-danger">
+                                            <div class="card-img-container">
+                                                <div class="sale-badge">SALE</div>
+                                                <img src="@medicine.ImageUrl" class="card-img-top" alt="@medicine.Name">
+                                            </div>
+                                            <div class="card-body">
+                                                <span class="category-badge">@medicine.Category</span>
+                                                <h6 class="card-title mt-2" style="color: #007bff;">@medicine.Name</h6>
+                                                <div class="d-flex align-items-center mb-2">
+                                                    <span class="price-tag">₹@medicine.Price.ToString("0.00")</span>
+                                                    <span class="old-price ms-2">₹@((medicine.Price * 1.3m).ToString("0.00"))</span>
+                                                </div>
+                                                <span class="badge @(medicine.StockStatus == "In Stock" ? "bg-success" : "bg-warning") stock-badge">
+                                                    @medicine.StockStatus
+                                                </span>
+                                                <a asp-action="MedicineDetail" asp-route-id="@medicine.MedicineId"
+                                                   class="btn btn-outline-danger btn-sm w-100 mt-2">
+                                                    <i class="fas fa-shopping-cart me-1"></i> View Deal
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                <!-- All Medicines Section -->
+                <div class="card">
+                    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0"><i class="fas fa-pills me-2"></i> All Medicines</h5>
+                        <span class="badge bg-light text-primary">@Model.Count Items</span>
+                    </div>
+                    <div class="card-body">
+                        @if (Model.Count == 0)
+                        {
+                            <div class="text-center py-5">
+                                <i class="fas fa-box-open fa-4x text-muted mb-3"></i>
+                                <h4 style="color: #007bff;">No medicines available</h4>
+                                <p class="text-muted">Check back later for new arrivals</p>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="row">
+                                @foreach (var medicine in Model)
+                                {
+                                    <div class="col-md-4 col-lg-3 mb-4">
+                                        <div class="card medicine-card">
+                                            @if (medicine.IsOnSale)
+                                            {
+                                                <div class="sale-badge">SALE</div>
+                                            }
+                                            @if (medicine.IsFeatured)
+                                            {
+                                                <div class="featured-badge">FEATURED</div>
+                                            }
+
+                                            <div class="card-img-container">
+                                                <img src="@medicine.ImageUrl" class="card-img-top" alt="@medicine.Name">
+                                            </div>
+
+                                            <div class="card-body">
+                                                <span class="badge bg-primary mb-2">@medicine.Category</span>
+                                                <h6 class="card-title" style="height: 40px; overflow: hidden; color: #007bff;">@medicine.Name</h6>
+
+                                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                                    <span class="price-tag">₹@medicine.Price.ToString("0.00")</span>
+                                                    <span class="badge @(medicine.StockStatus == "In Stock" ? "bg-success" : medicine.StockStatus == "Low Stock" ? "bg-warning" : "bg-danger") stock-badge">
+                                                        @medicine.StockStatus
+                                                    </span>
+                                                </div>
+
+                                                <div class="d-grid gap-2">
+                                                    <a asp-action="MedicineDetail" asp-route-id="@medicine.MedicineId"
+                                                       class="btn btn-outline-primary btn-sm">
+                                                        <i class="fas fa-eye me-1"></i> View Details
+                                                    </a>
+                                                    <form asp-action="AddToCart" method="post" onsubmit="return handleAddToCart(this)">
+                                                        <input type="hidden" name="medicineId" value="@medicine.MedicineId" />
+                                                        <input type="hidden" name="quantity" value="1" />
+                                                        <button type="submit" class="btn btn-success btn-sm w-100"
+                                                                @(medicine.StockStatus == "Out of Stock" ? "disabled" : "")>
+                                                            <i class="fas fa-cart-plus me-1"></i> Add to Cart
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Floating Cart Button -->
+@if (ViewBag.CartCount > 0)
+{
+    <a asp-action="Cart" class="floating-cart-btn">
+        <i class="fas fa-shopping-cart fa-lg"></i>
+        <span class="floating-cart-count">@ViewBag.CartCount</span>
+    </a>
+}
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<script>
+    // Handle Add to Cart with button disable
+    function handleAddToCart(form) {
+        const button = form.querySelector('button[type="submit"]');
+        if (button.disabled) return false;
+
+        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
+        button.disabled = true;
+
+        // Auto hide alerts after 3 seconds
+        setTimeout(() => {
+            const alerts = document.querySelectorAll('.alert-fixed');
+            alerts.forEach(alert => {
+                if (alert) {
+                    alert.style.display = 'none';
+                }
+            });
+        }, 3000);
+
+        return true;
+    }
+
+    // Auto hide alerts after 5 seconds
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(() => {
+            const alerts = document.querySelectorAll('.alert-fixed');
+            alerts.forEach(alert => {
+                if (alert) {
+                    alert.style.display = 'none';
+                }
+            });
+        }, 5000);
+    });
+</script>
+

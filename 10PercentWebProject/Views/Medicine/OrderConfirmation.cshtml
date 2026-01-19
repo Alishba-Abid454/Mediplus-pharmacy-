@@ -1,0 +1,190 @@
+﻿@model Order
+@{
+    ViewData["Title"] = "Order Confirmation";
+    Layout = "_UserLayout";
+}
+
+<style>
+    .success-icon {
+        animation: bounceIn 0.6s;
+    }
+
+    @@keyframes bounceIn {
+        0% {
+            transform: scale(0.3);
+            opacity: 0;
+        }
+
+        50% {
+            transform: scale(1.05);
+            opacity: 1;
+        }
+
+        70% {
+            transform: scale(0.9);
+        }
+
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    .table th {
+        background-color: #f8f9fa;
+    }
+
+    .card {
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .card-header {
+        border-radius: 10px 10px 0 0 !important;
+    }
+</style>
+
+<div class="container mt-4">
+    <!-- Success Header -->
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card border-success">
+                <div class="card-body text-center py-5">
+                    <!-- Success Icon -->
+                    <div class="success-icon mb-4">
+                        <i class="fas fa-check-circle fa-5x text-success"></i>
+                    </div>
+
+                    <!-- Success Message -->
+                    <h2 class="card-title text-success">Order Confirmed!</h2>
+                    <p class="lead">Thank you for your purchase. Your order has been received and is being processed.</p>
+
+                    <!-- Success Message from TempData -->
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success mt-3">
+                            @TempData["SuccessMessage"]
+                        </div>
+                    }
+
+                    <!-- Order ID -->
+                    <div class="alert alert-info mt-4">
+                        <h4 class="alert-heading">Order #@Model.OrderId</h4>
+                        <p class="mb-0">Please save this order number for reference</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Details -->
+    <div class="row mt-4">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="fas fa-receipt"></i> Order Details</h4>
+                </div>
+                <div class="card-body">
+                    <!-- Order Items -->
+                    <h5>Items Ordered</h5>
+                    @if (Model.Items != null && Model.Items.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Medicine</th>
+                                        <th>Quantity</th>
+                                        <th>Price</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.Items)
+                                    {
+                                        <tr>
+                                            <td>@item.MedicineName</td>
+                                            <td>@item.Quantity</td>
+                                            <td>$@item.Price.ToString("0.00")</td>
+                                            <td>$@((item.Price * item.Quantity).ToString("0.00"))</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                                <tfoot>
+                                    <tr class="table-active">
+                                        <td colspan="3" class="text-end"><strong>Total Amount:</strong></td>
+                                        <td><strong>$@Model.TotalAmount.ToString("0.00")</strong></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning">
+                            No items found in this order.
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h4 class="mb-0"><i class="fas fa-info-circle"></i> Order Summary</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span><i class="fas fa-calendar-alt text-primary me-2"></i>Order Date</span>
+                            <span>@Model.OrderDate.ToString("MMMM dd, yyyy")</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span><i class="fas fa-clock text-primary me-2"></i>Order Time</span>
+                            <span>@Model.OrderDate.ToString("hh:mm tt")</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span><i class="fas fa-truck text-primary me-2"></i>Status</span>
+                            <span class="badge bg-success">@Model.Status</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span><i class="fas fa-credit-card text-primary me-2"></i>Payment Method</span>
+                            <span>@Model.PaymentMethod</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Shipping Address -->
+            <div class="card mt-3">
+                <div class="card-header bg-warning text-dark">
+                    <h4 class="mb-0"><i class="fas fa-map-marker-alt"></i> Shipping Address</h4>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
+                        <i class="fas fa-user me-2"></i>User ID: @Model.UserId<br>
+                        <i class="fas fa-map-pin me-2"></i>@Model.ShippingAddress
+                    </p>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="card mt-3">
+                <div class="card-body text-center">
+                    <!-- Note: Your controller uses HomePage action, not Index -->
+                    <a href="@Url.Action("HomePage", "Medicine")" class="btn btn-primary btn-lg w-100 mb-2">
+                        <i class="fas fa-home"></i> Continue Shopping
+                    </a>
+                    <!-- Your controller has OrderSuccess action -->
+@*                     <a href="@Url.Action("OrderSuccess", "Medicine", new { orderId = Model.OrderId })" class="btn btn-success btn-lg w-100">
+                        <i class="fas fa-receipt"></i> View Detailed Receipt
+                    </a> *@
+                    <p class="text-muted small mt-3">
+                        <i class="fas fa-envelope"></i> A confirmation email will be sent to you shortly.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

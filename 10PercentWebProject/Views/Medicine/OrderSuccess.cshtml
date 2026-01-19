@@ -1,0 +1,96 @@
+﻿@model Order
+@{
+    ViewData["Title"] = "Order Confirmed";
+    Layout = "_UserLayout";
+}
+
+<style>
+    .success-page {
+        max-width: 800px;
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    .success-card {
+        border: none;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        border-radius: 10px;
+        padding: 3rem;
+    }
+
+    .success-icon {
+        font-size: 4rem;
+        color: #28a745;
+        margin-bottom: 1rem;
+    }
+
+    .order-details {
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        padding: 2rem;
+        margin: 2rem 0;
+    }
+
+    .detail-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #e9ecef;
+    }
+</style>
+
+<div class="success-page">
+    <div class="success-card">
+        <!-- Success Icon -->
+        <div class="success-icon">&#x2705;</div>
+
+        <!-- Success Message -->
+        <h1 class="text-success">Order Confirmed!</h1>
+        <p class="lead">Thank you for your purchase. Your order has been successfully placed.</p>
+
+        <!-- Success Message from TempData -->
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success mt-3">
+                @TempData["SuccessMessage"]
+            </div>
+        }
+
+        <!-- Order Number -->
+        <div style="background: linear-gradient(135deg, #007bff, #0056b3); color: white; border-radius: 10px; padding: 1.5rem; margin: 2rem 0;">
+            <h4>Order #@Model.OrderId</h4>
+            <p class="mb-0">
+                Estimated Delivery:
+                <strong>@(ViewBag.EstimatedDelivery ?? DateTime.Now.AddDays(5).ToString("MMMM dd, yyyy"))</strong>
+            </p>
+        </div>
+
+        <!-- Order Details -->
+        <div class="order-details text-start">
+            <h5 class="mb-3">Order Details</h5>
+
+            <div class="detail-row">
+                <span>Order Date:</span>
+                <span>@Model.OrderDate.ToString("MMMM dd, yyyy")</span>
+            </div>
+            <div class="detail-row">
+                <span>Order Total:</span>
+                <span class="text-success fw-bold">$@Model.TotalAmount.ToString("0.00")</span>
+            </div>
+            <div class="detail-row">
+                <span>Payment Method:</span>
+                <span>@Model.PaymentMethod</span>
+            </div>
+            <div class="detail-row">
+                <span>Shipping Address:</span>
+                <span>@Model.ShippingAddress</span>
+            </div>
+        </div>
+
+        <!-- Continue Shopping Button -->
+        <div class="mt-4">
+            <a href="@Url.Action("HomePage", "Medicine")" class="btn btn-primary">← Continue Shopping</a>
+        </div>
+    </div>
+</div>
+

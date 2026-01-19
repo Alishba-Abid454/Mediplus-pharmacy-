@@ -1,0 +1,230 @@
+﻿@{
+    ViewData["Title"] = "Checkout";
+    Layout = "_UserLayout";
+}
+
+<style>
+    .checkout-page {
+        max-width: 1000px;
+        margin: 0 auto;
+        background: #f8f9fa;
+        min-height: 100vh;
+        padding: 20px;
+    }
+
+    .checkout-card {
+        background: white;
+        border: none;
+        box-shadow: 0 3px 10px rgba(0, 123, 255, 0.08);
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
+        padding: 1.5rem;
+        border: 1px solid rgba(0, 123, 255, 0.1);
+    }
+
+    .checkout-header {
+        background: linear-gradient(45deg, #007bff 0%, #0056b3 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 12px;
+        margin-bottom: 30px;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #007bff;
+        margin-bottom: 8px;
+    }
+
+    .form-control, .form-select {
+        border: 2px solid rgba(0, 123, 255, 0.2);
+        border-radius: 8px;
+        padding: 10px 15px;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+    }
+
+    .btn-checkout {
+        background: linear-gradient(45deg, #28a745 0%, #218838 100%);
+        color: white;
+        padding: 15px 30px;
+        font-size: 18px;
+        font-weight: 600;
+        border-radius: 10px;
+        border: none;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+
+    .btn-checkout:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(40, 167, 69, 0.3);
+    }
+
+    .price-item {
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(0, 123, 255, 0.1);
+    }
+
+    .total-price {
+        font-size: 24px;
+        font-weight: 700;
+        color: #28a745;
+    }
+
+    .summary-header {
+        background: linear-gradient(45deg, #007bff 0%, #0056b3 100%);
+        color: white;
+        padding: 15px;
+        border-radius: 10px 10px 0 0;
+        margin: -1.5rem -1.5rem 1.5rem -1.5rem;
+    }
+
+    .empty-cart {
+        text-align: center;
+        padding: 50px 20px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    }
+
+    .cart-icon {
+        font-size: 80px;
+        color: #007bff;
+        opacity: 0.5;
+        margin-bottom: 20px;
+    }
+</style>
+
+<div class="checkout-page">
+    <!-- Header -->
+    <div class="checkout-header">
+        <h2 class="mb-2">Checkout</h2>
+        <p class="mb-0">Complete your purchase</p>
+    </div>
+
+    @if (ViewBag.CartTotal == 0 || ViewBag.CartTotal == null)
+    {
+        <div class="empty-cart">
+            <i class="fas fa-shopping-cart cart-icon"></i>
+            <h3 class="mb-3" style="color: #007bff;">Your cart is empty</h3>
+            <p class="text-muted mb-4">Add items to your cart before checkout</p>
+            <a asp-action="HomePage" class="btn btn-primary">Browse Medicines</a>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <!-- Checkout Form -->
+            <div class="col-lg-8">
+                <form method="post" asp-action="ProcessCheckout">
+                    <!-- Delivery Address -->
+                    <div class="checkout-card">
+                        <h5 class="mb-4" style="color: #007bff;">
+                            <i class="fas fa-map-marker-alt me-2"></i> Delivery Address
+                        </h5>
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label">Full Address *</label>
+                                <textarea name="address" class="form-control" rows="4"
+                                      placeholder="Enter your complete delivery address"
+                                      required></textarea>
+                                <small class="text-muted">Include house number, street, area, city</small>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">City *</label>
+                                <input type="text" class="form-control" name="city" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Pincode *</label>
+                                <input type="text" class="form-control" name="pincode" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">State *</label>
+                                <input type="text" class="form-control" name="state" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Phone Number *</label>
+                                <input type="tel" class="form-control" name="phone" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Continue to Payment -->
+                    <div class="d-grid mt-4">
+                        <button type="submit" class="btn-checkout">
+                            <i class="fas fa-lock me-2"></i> Proceed to Payment
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="col-lg-4">
+                <div class="checkout-card">
+                    <div class="summary-header">
+                        <h5 class="mb-0"><i class="fas fa-receipt me-2"></i> Order Summary</h5>
+                    </div>
+
+                    <div class="price-item d-flex justify-content-between">
+                        <span>Subtotal</span>
+                        <span>₹@ViewBag.CartTotal?.ToString("0.00")</span>
+                    </div>
+                    <div class="price-item d-flex justify-content-between">
+                        <span>Shipping</span>
+                        <span class="text-success">FREE</span>
+                    </div>
+                    <div class="price-item d-flex justify-content-between">
+                        <span>Tax (18%)</span>
+                        <span>₹@((ViewBag.CartTotal * 0.18m)?.ToString("0.00"))</span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <strong style="font-size: 18px;">Total Amount</strong>
+                        <strong class="total-price">₹@((ViewBag.CartTotal * 1.18m)?.ToString("0.00"))</strong>
+                    </div>
+
+                    <!-- Payment Methods -->
+                    <div class="mt-4">
+                        <h6><i class="fas fa-credit-card me-2"></i> Payment Methods</h6>
+                        <div class="form-check mt-2">
+                            <input class="form-check-input" type="radio" name="paymentMethod" checked>
+                            <label class="form-check-label">
+                                <i class="fas fa-credit-card text-primary"></i> Credit/Debit Card
+                            </label>
+                        </div>
+                        <div class="form-check mt-2">
+                            <input class="form-check-input" type="radio" name="paymentMethod">
+                            <label class="form-check-label">
+                                <i class="fas fa-university text-primary"></i> UPI
+                            </label>
+                        </div>
+                        <div class="form-check mt-2">
+                            <input class="form-check-input" type="radio" name="paymentMethod">
+                            <label class="form-check-label">
+                                <i class="fas fa-money-bill-wave text-primary"></i> Cash on Delivery
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cart Items Preview -->
+                <div class="checkout-card mt-3">
+                    <h6><i class="fas fa-shopping-cart me-2"></i> Items in Cart (@ViewBag.CartCount)</h6>
+                    <div class="mt-3">
+                        <a asp-action="Cart" class="btn btn-outline-primary w-100">
+                            <i class="fas fa-edit me-2"></i> Edit Cart Items
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">

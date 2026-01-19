@@ -1,0 +1,84 @@
+﻿@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Register";
+    Layout = "_FrontLayout";
+
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="row">
+    <!-- Left Side - Image Section -->
+    <div class="col-md-6 d-none d-md-block">
+        <div class="p-4" style="
+        background: linear-gradient(rgba(26, 115, 232, 0.4), rgba(26, 115, 232, 0.3)),
+                url('/Picture/FrontImage.png');
+        background-size: cover;
+        background-position: center;
+        min-height: 600px;
+        border-radius: 10px;">
+
+            <div class="text-white mt-4 p-3" style="background: rgba(0, 0, 0, 0.3); border-radius: 8px;">
+                <h2 class="mb-4">Welcome to MedicinePlus</h2>
+                <p>Join our pharmacy management system today!</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+            <h2>Create a new account.</h2>
+            <hr />
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+            <div class="form-floating mb-3">
+                <input asp-for="Input.FirstName" class="form-control" autocomplete="given-name" aria-required="true" placeholder="First Name" />
+                <label asp-for="Input.FirstName">First Name</label>
+                <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input asp-for="Input.LastName" class="form-control" autocomplete="family-name" aria-required="true" placeholder="Last Name" />
+                <label asp-for="Input.LastName">Last Name</label>
+                <span asp-validation-for="Input.LastName" class="text-danger"></span>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                <label asp-for="Input.Email">Email</label>
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                <label asp-for="Input.Password">Password</label>
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                <label asp-for="Input.ConfirmPassword">Confirm Password</label>
+                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+            </div>
+
+            <!-- Role Selection - Simple Dropdown -->
+            <div class="form-floating mb-3">
+                <select asp-for="Input.Role" class="form-control" aria-required="true">
+                    <option value="">Select Role</option>
+                    <option value="User">Register as User</option>
+                    <option value="Admin">Register as Admin</option>
+                </select>
+                <label asp-for="Input.Role">Register As</label>
+                <span asp-validation-for="Input.Role" class="text-danger"></span>
+            </div>
+
+            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+

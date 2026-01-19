@@ -1,0 +1,157 @@
+﻿@model Order
+@{
+    ViewData["Title"] = "Payment";
+    Layout = "_UserLayout";
+
+    var order = ViewBag.Order as Order ?? Model;
+    var paymentMethods = ViewBag.PaymentMethods as List<string> ?? new List<string> { "Credit Card", "UPI", "Cash on Delivery" };
+}
+
+<style>
+    .payment-page {
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .payment-card {
+        border: none;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        border-radius: 10px;
+        margin-bottom: 1rem;
+        padding: 1.5rem;
+    }
+
+    .payment-method {
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+</style>
+
+<div class="payment-page">
+    <h2 class="mb-4">Payment</h2>
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    <form method="post" action="@Url.Action("ProcessPayment", "Medicine")">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="orderId" value="@order.OrderId" />
+
+        <div class="row">
+            <!-- Payment Methods -->
+            <div class="col-lg-8">
+                <div class="payment-card">
+                    <h5 class="mb-4">Select Payment Method</h5>
+
+                    @foreach (var method in paymentMethods)
+                    {
+                        <div class="payment-method">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="paymentMethod"
+                                       value="@method" id="@method"
+                                       @(method == "Credit Card" ? "checked" : "") required>
+                                <label class="form-check-label" for="@method">
+                                    <strong>
+                                        @if (method == "Credit Card")
+                                        {
+                                            @:&#x1F4B3; Credit/Debit Card
+                                        }
+                                        else if (method == "UPI")
+                                        {
+                                            @:&#x1F4F1; UPI Payment
+                                        }
+                                        else if (method == "Cash on Delivery")
+                                        {
+                                            @:&#x1F4B0; Cash on Delivery
+                                        }
+                                        else
+                                        {
+                                            @method
+                                        }
+                                    </strong>
+                                </label>
+                            </div>
+
+                            @if (method == "Credit Card")
+                            {
+                                <div class="row g-3 mt-2">
+                                    <div class="col-12">
+                                        <label class="form-label">Card Number</label>
+                                        <input type="text" class="form-control" placeholder="1234 5678 9012 3456"
+                                               name="cardNumber" maxlength="19">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Expiry Date</label>
+                                        <input type="text" class="form-control" placeholder="MM/YY"
+                                               name="expiryDate">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">CVV</label>
+                                        <input type="text" class="form-control" placeholder="123"
+                                               name="cvv" maxlength="3">
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+
+                    <!-- Complete Payment -->
+                    <div class="d-grid mt-4">
+                        <button type="submit" class="btn btn-success btn-lg">
+                            Complete Payment - $@order.TotalAmount.ToString("0.00")
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="col-lg-4">
+                <div class="payment-card">
+                    <h5 class="mb-4">Order Summary</h5>
+
+                    @if (order.Items != null && order.Items.Any())
+                    {
+                        foreach (var item in order.Items)
+                        {
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>@item.MedicineName × @item.Quantity</span>
+                                <span>$@((item.Price * item.Quantity).ToString("0.00"))</span>
+                            </div>
+                        }
+                    }
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Subtotal</span>
+                        <span>$@order.TotalAmount.ToString("0.00")</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Shipping</span>
+                        <span class="text-success">FREE</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Tax</span>
+                        <span>Included</span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between">
+                        <strong>Total</strong>
+                        <strong class="h5 text-success">$@order.TotalAmount.ToString("0.00")</strong>
+                    </div>
+                </div>
+
+                <!-- Order Info -->
+                <div class="payment-card mt-3">
+                    <h5 class="mb-3">Order Information</h5>
+                    <p class="mb-1"><strong>Order #:</strong> @order.OrderId</p>
+                    <p class="mb-0"><strong>Shipping to:</strong> @order.ShippingAddress</p>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,210 @@
+﻿@model List<_10PercentWebProject.Models.AdminMedicine>
+@{
+    ViewData["Title"] = "Medicine List";
+    Layout = "_AdminLayout";
+}
+
+<style>
+    .medicine-table {
+        font-size: 0.9rem;
+    }
+
+    .medicine-table th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+        border-bottom: 2px solid #dee2e6;
+    }
+
+    .status-badge {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+    }
+
+    .search-box {
+        max-width: 400px;
+    }
+
+    .action-btn {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.8rem;
+        margin: 0 2px;
+    }
+
+    .filter-section {
+        background-color: #f8f9fa;
+        border-radius: 0.375rem;
+        padding: 1rem;
+    }
+
+    .stock-low {
+        background-color: #fff3cd !important;
+    }
+
+    .expiring-soon {
+        background-color: #f8d7da !important;
+    }
+
+    .expired-row {
+        background-color: #f8d7da !important;
+    }
+
+    .dashboard-btn {
+        background-color: #6c757d;
+        border-color: #6c757d;
+        color: white;
+    }
+</style>
+
+<div class="main-content">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary">📋 Medicine List</h2>
+        <div>
+            <a asp-action="Dashboard" asp-controller="Admin" class="btn dashboard-btn me-2">🏠 Dashboard</a>
+            <a asp-action="AddMedicine" class="btn btn-success">➕ Add New Medicine</a>
+        </div>
+    </div>
+
+    <!-- Search and Filter -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="filter-section">
+                <form method="get" asp-action="MedicineList" class="row g-3">
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <input type="text" class="form-control search-box" name="searchTerm"
+                                   placeholder="Search medicines..." value="@ViewBag.SearchTerm">
+                            <button class="btn btn-outline-primary" type="submit">🔍 Search</button>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-select" name="category">
+                            <option value="">All Categories</option>
+                            @if (ViewBag.Categories != null)
+                            {
+                                @foreach (var category in ViewBag.Categories)
+                                {
+                                    <option value="@category" selected="@(ViewBag.SelectedCategory == category)">
+                                        @category
+                                    </option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-select" name="status">
+                            <option value="">All Status</option>
+                            <option value="low" selected="@(ViewBag.SelectedStatus == "low")">Low Stock</option>
+                            <option value="expiring" selected="@(ViewBag.SelectedStatus == "expiring")">Expiring Soon</option>
+                            <option value="expired" selected="@(ViewBag.SelectedStatus == "expired")">Expired</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <a asp-action="MedicineList" class="btn btn-outline-secondary w-100">🔄 Clear</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Medicine Table -->
+    <div class="card">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">All Medicines (Total: @Model.Count)</h5>
+        </div>
+
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover medicine-table mb-0">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Medicine Name</th>
+                            <th>Category</th>
+                            <th>Stock</th>
+                            <th>Price</th>
+                            <th>Expiry Date</th>
+                            <th>Supplier</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var medicine in Model)
+                        {
+                            var rowClass = "";
+                            var status = "In Stock";
+                            var badgeClass = "bg-success";
+
+                            if (medicine.Quantity <= 0)
+                            {
+                                rowClass = "expired-row";
+                                status = "Out of Stock";
+                                badgeClass = "bg-dark";
+                            }
+                            else if (medicine.Quantity <= medicine.MinStockLevel)
+                            {
+                                rowClass = "stock-low";
+                                status = "Low Stock";
+                                badgeClass = "bg-warning";
+                            }
+                            else if (medicine.ExpiryDate <= DateTime.Now)
+                            {
+                                rowClass = "expired-row";
+                                status = "Expired";
+                                badgeClass = "bg-dark";
+                            }
+                            else if (medicine.ExpiryDate <= DateTime.Now.AddDays(30))
+                            {
+                                rowClass = "expiring-soon";
+                                status = "Expiring Soon";
+                                badgeClass = "bg-danger";
+                            }
+
+                            <tr class="@rowClass">
+                                <td>@medicine.MedicineId</td>
+                                <td><strong>@medicine.Name</strong></td>
+                                <td>@medicine.Category</td>
+                                <td>@medicine.Quantity</td>
+                                <td>$@medicine.Price.ToString("N2")</td>
+                                <td>@medicine.ExpiryDate.ToString("yyyy-MM-dd")</td>
+                                <td>@medicine.Supplier</td>
+                                <td>
+                                    <span class="badge @badgeClass status-badge">@status</span>
+                                </td>
+                                <td>
+                                    <a asp-action="EditMedicine" asp-route-id="@medicine.MedicineId"
+                                       class="btn btn-sm btn-outline-primary action-btn">✏️ Edit</a>
+
+                                    <button onclick="deleteMedicine(@medicine.MedicineId)"
+                                            class="btn btn-sm btn-outline-danger action-btn">
+                                        🗑️ Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function deleteMedicine(id) {
+            $.ajax({
+                url: '/Admin/DeleteMedicine/' + id,
+                type: 'POST',
+                headers: {
+                    'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                },
+                success: function () {
+                    location.reload();
+                }
+            });
+        }
+    </script>
+}

@@ -1,0 +1,211 @@
+﻿@model _10PercentWebProject.Models.DashboardStats
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    Layout = "_AdminLayout";
+}
+
+<style>
+    .admin-card {
+        transition: all 0.3s ease;
+        border: none;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+ 
+    .admin-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+
+    .stat-card {
+        border-left: 4px solid #007bff;
+    }
+
+    .stat-card.warning {
+        border-left-color: #ffc107;
+    }
+
+    .stat-card.danger {
+         border-left-color: #dc3545;
+    }
+
+    .stat-card.success {
+        border-left-color: #28a745;
+    }
+
+    .stat-card.info {
+        border-left-color: #17a2b8;
+    }
+
+    .alert-badge {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+    }
+
+    .icon-large {
+        font-size: 2.5rem;
+        opacity: 0.8;
+    }
+
+</style>
+
+<div class="main-content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Dashboard Overview</h2>
+        <div class="d-flex align-items-center">
+        </div>
+    </div>
+
+    <!-- Display Success/Error Messages -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <!-- STATISTICS CARDS -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card admin-card stat-card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h5 class="card-title">Total Medicines</h5>
+                            <h2 class="text-primary">@Model.TotalMedicines</h2>
+                        </div>
+                        <div class="align-self-center">
+                            <span class="icon-large">&#128138;</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card admin-card stat-card warning h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h5 class="card-title">Low Stock</h5>
+                            <h2 class="text-warning">@Model.LowStockMedicines</h2>
+                        </div>
+                        <div class="align-self-center position-relative">
+                            <span class="icon-large">&#9888;</span>
+                            @if (Model.LowStockMedicines > 0)
+                            {
+                                <span class="badge bg-danger alert-badge">!</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card admin-card stat-card danger h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h5 class="card-title">Expiring Soon</h5>
+                            <h2 class="text-danger">@Model.ExpiringSoonMedicines</h2>
+                        </div>
+                        <div class="align-self-center">
+                            <span class="icon-large">&#128336;</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card admin-card stat-card success h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h5 class="card-title">Categories</h5>
+                            <h2 class="text-success">@Model.TotalCategories</h2>
+                        </div>
+                        <div class="align-self-center">
+                            <span class="icon-large">&#128202;</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- QUICK ACTIONS -->
+    <div class="card admin-card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Quick Actions</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3 mb-2">
+                    <a asp-action="AddMedicine" class="btn btn-success w-100">
+                        <i class="fas fa-plus me-1"></i> Add Medicine
+                    </a>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <a asp-action="LowStock" class="btn btn-warning w-100">
+                        <i class="fas fa-exclamation-triangle me-1"></i> View Low Stock
+                    </a>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <a asp-action="ExpirySoon" class="btn btn-danger w-100">
+                        <i class="fas fa-clock me-1"></i> Check Expiry
+                    </a>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <a asp-action="MedicineList" class="btn btn-info w-100">
+                        <i class="fas fa-list me-1"></i> View All Medicines
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RECENT MEDICINES TABLE -->
+    <div class="card admin-card">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Recent Medicines</h5>
+            <a asp-action="MedicineList" class="btn btn-light btn-sm">View All</a>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Medicine Name</th>
+                        <th>Category</th>
+                        <th>Stock</th>
+                        <th>Price</th>
+                        <th>Expiry</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="7" class="text-center text-muted">
+                            No recent medicines to display. <a asp-action="AddMedicine">Add a new medicine</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+

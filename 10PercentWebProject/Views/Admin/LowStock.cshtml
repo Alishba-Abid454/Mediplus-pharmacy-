@@ -1,0 +1,141 @@
+﻿@model List<AdminMedicine>
+@{
+    ViewData["Title"] = "Low Stock Alerts";
+    Layout = "_AdminLayout";
+}
+
+<style>
+    .low-stock-page {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .alert-card {
+        border: none;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        border-radius: 10px;
+    }
+
+    .alert-header {
+        background: linear-gradient(135deg, #ffc107, #e0a800);
+        color: white;
+        border-radius: 10px 10px 0 0 !important;
+    }
+
+    .low-stock-item {
+        border-left: 4px solid #ffc107;
+        background-color: #fff3cd;
+        margin-bottom: 1rem;
+        border-radius: 5px;
+    }
+
+    .critical-stock {
+        border-left: 4px solid #dc3545;
+        background-color: #f8d7da;
+    }
+
+    .reorder-btn {
+        font-size: 0.875rem;
+        padding: 0.25rem 0.75rem;
+    }
+
+    .stock-badge {
+        font-size: 0.75rem;
+    }
+</style>
+
+<div class="main-content">
+    <div class="low-stock-page">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="text-warning">⚠️ Low Stock Alerts</h2>
+            <div class="d-flex align-items-center">
+                <span class="badge bg-danger me-3">@Model.Count Items Need Attention</span>
+                <a asp-action="Dashboard" class="btn btn-outline-secondary">← Back to Dashboard</a>
+            </div>
+        </div>
+
+        <!-- Statistics -->
+        @{
+            var criticalCount = Model.Count(m => m.Quantity <= 5);
+            var lowCount = Model.Count(m => m.Quantity > 5 && m.Quantity <= m.MinStockLevel);
+        }
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card text-bg-warning">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Low Stock</h5>
+                        <h2 class="card-text">@Model.Count</h2>
+                        <small>Items below threshold</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-bg-danger">
+                    <div class="card-body">
+                        <h5 class="card-title">Critical Stock</h5>
+                        <h2 class="card-text">@criticalCount</h2>
+                        <small>Quantity ≤ 5</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-bg-info">
+                    <div class="card-body">
+                        <h5 class="card-title">Low Stock</h5>
+                        <h2 class="card-text">@lowCount</h2>
+                        <small>Below min level</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-bg-success">
+                    <div class="card-body">
+                        <h5 class="card-title">Safe Stock</h5>
+                        <h2 class="card-text">@ViewBag.SafeStockCount</h2>
+                        <small>Items at good levels</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Low Stock List -->
+        <div class="card alert-card">
+            <div class="card-header alert-header d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">Low Stock Items</h4>
+            </div>
+            <div class="card-body">
+                @foreach (var medicine in Model)
+                {
+                    var isCritical = medicine.Quantity <= 5;
+                    var itemClass = isCritical ? "critical-stock" : "";
+                    var badgeClass = isCritical ? "bg-danger" : "bg-warning";
+                    var message = isCritical ? "⚠️ Very low - Reorder immediately" : "⚠️ Low stock - Reorder suggested";
+                    var textColor = isCritical ? "text-danger" : "text-warning";
+
+                    <div class="low-stock-item p-3 @itemClass">
+                        <div class="row align-items-center">
+                            <div class="col-md-3">
+                                <h6 class="mb-1">@medicine.Name</h6>
+                                <small class="text-muted">@medicine.Category</small>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="badge @badgeClass stock-badge">Current: @medicine.Quantity</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="badge bg-secondary stock-badge">Min: @medicine.MinStockLevel</span>
+                            </div>
+                            <div class="col-md-3">
+                                <small class="@textColor">@message</small>
+                            </div>
+                            <div class="col-md-2">
+                                <a asp-action="EditMedicine" asp-route-id="@medicine.MedicineId"
+                                   class="btn btn-success btn-sm reorder-btn">Reorder +@(medicine.MinStockLevel * 3)</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,164 @@
+﻿<div class="header">
+    <div class="logo">
+        <i class="fas fa-pills"></i>
+        <span>MedicinePlus</span>
+    </div>
+
+    <div class="user-menu">
+        <!-- Logout Button - WHITE for better visibility -->
+        <button class="logout-btn-white" onclick="location.href='https://localhost:7164/Identity/Account/Register'">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+        </button>
+    </div>
+</div>
+
+<style>
+    .header {
+        background: linear-gradient(135deg, #007bff, #0056b3);
+        color: white;
+        padding: 15px 30px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        margin-left: 65px;
+        margin-right: 65px;
+        border-radius: 10px;
+        margin-bottom: 7px;
+    }
+
+    .logo {
+        display: flex;
+        align-items: center;
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+        .logo i {
+            margin-right: 10px;
+            font-size: 28px;
+        }
+
+    .user-menu {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    /* WHITE Logout Button - Better Visibility */
+    .logout-btn-white {
+        background: white;
+        color: #007bff;
+        border: none;
+        border-radius: 8px;
+        padding: 10px 25px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+    }
+
+        .logout-btn-white:hover {
+            background: #f8f9fa;
+            color: #0056b3;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 255, 255, 0.4);
+        }
+
+        .logout-btn-white:active {
+            transform: translateY(0);
+        }
+
+        .logout-btn-white i {
+            font-size: 16px;
+        }
+</style>
+
+
+@* <div class="header">
+    <div class="logo">
+        <i class="fas fa-pills"></i>
+        <span>MedicinePlus</span>
+    </div>
+
+    <div class="user-menu">
+        <!-- Register Button - WHITE for better visibility -->
+        <button class="register-btn-white" onclick="location.href='/Identity/Account/Register'">
+            <i class="fas fa-user-plus"></i>
+            <span>Register</span>
+        </button>
+    </div>
+</div>
+
+<style>
+    .header {
+        background: linear-gradient(135deg, #007bff, #0056b3);
+        color: white;
+        padding: 15px 30px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        margin-left: 65px;
+        margin-right: 65px;
+        border-radius: 10px;
+        margin-bottom: 7px;
+    }
+
+    .logo {
+        display: flex;
+        align-items: center;
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+        .logo i {
+            margin-right: 10px;
+            font-size: 28px;
+        }
+
+    .user-menu {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    /* WHITE Register Button - Better Visibility */
+    .register-btn-white {
+        background: white;
+        color: #007bff;
+        border: none;
+        border-radius: 8px;
+        padding: 10px 25px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+    }
+
+        .register-btn-white:hover {
+            background: #f8f9fa;
+            color: #0056b3;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 255, 255, 0.4);
+        }
+
+        .register-btn-white:active {
+            transform: translateY(0);
+        }
+
+        .register-btn-white i {
+            font-size: 16px;
+        }
+</style>
+
+ *@
